@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Market Simulator Demo</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="scanlines" aria-hidden="true"></div>
+    <main class="layout">
+      <section class="panel panel-left">
+        <h1 class="panel-title">Client Console</h1>
+
+        <div id="authLoggedOut" class="card">
+          <h2>Login / Register</h2>
+          <label for="usernameInput">Account Name</label>
+          <input id="usernameInput" type="text" autocomplete="username" placeholder="trader01" />
+
+          <label for="passwordInput">Password</label>
+          <input id="passwordInput" type="password" autocomplete="current-password" placeholder="********" />
+
+          <div class="button-row">
+            <button id="registerBtn" class="btn">Register</button>
+            <button id="loginBtn" class="btn btn-strong">Login</button>
+          </div>
+        </div>
+
+        <div id="authLoggedIn" class="card hidden">
+          <h2>Session</h2>
+          <p><span class="label">User:</span> <span id="sessionUsername">-</span></p>
+          <p><span class="label">Cash:</span> <span id="sessionCash">$0.00</span></p>
+          <p><span class="label">Holdings Value:</span> <span id="sessionHoldingsValue">$0.00</span></p>
+          <p><span class="label">Total Worth:</span> <span id="sessionTotalWorth">$0.00</span></p>
+          <button id="logoutBtn" class="btn">Logout</button>
+        </div>
+
+        <div class="card">
+          <h2>Held Stocks</h2>
+          <ul id="holdingsList" class="list"></ul>
+        </div>
+
+        <div class="card">
+          <h2>Connection</h2>
+          <p id="connectionStatus" class="status-pill">Disconnected</p>
+          <button id="refreshSnapshotBtn" class="btn">Refresh Snapshot</button>
+        </div>
+      </section>
+
+      <section class="panel panel-center">
+        <div class="tabs" id="stockTabs"></div>
+
+        <div class="card chart-card">
+          <h2 id="chartTitle">Market Chart</h2>
+          <canvas id="priceChart" width="960" height="420"></canvas>
+        </div>
+
+        <div class="card">
+          <h2>Trade</h2>
+          <div class="trade-grid">
+            <div>
+              <label for="tradeSymbol">Symbol</label>
+              <input id="tradeSymbol" type="text" readonly />
+            </div>
+            <div>
+              <label for="tradeQuantity">Quantity</label>
+              <input id="tradeQuantity" type="number" min="1" value="1" />
+            </div>
+          </div>
+          <div class="button-row">
+            <button id="buyBtn" class="btn btn-buy">Buy</button>
+            <button id="sellBtn" class="btn btn-sell">Sell</button>
+          </div>
+          <p id="tradeStatus" class="status-text">Log in to place trades.</p>
+        </div>
+      </section>
+
+      <section class="panel panel-right">
+        <div class="card">
+          <h2>Stock Stats</h2>
+          <p><span class="label">Symbol:</span> <span id="statSymbol">-</span></p>
+          <p><span class="label">Current Price:</span> <span id="statPrice">$0.00</span></p>
+          <p><span class="label">YTD Return:</span> <span id="statYtd">0.00%</span></p>
+          <p><span class="label">All Time High:</span> <span id="statAth">$0.00</span></p>
+          <p><span class="label">Total Volume:</span> <span id="statVolume">0</span></p>
+        </div>
+
+        <div class="card">
+          <h2>Live Trades</h2>
+          <ul id="tradeFeedList" class="list"></ul>
+        </div>
+
+        <div class="card">
+          <h2>Request Responses</h2>
+          <ul id="responseList" class="list"></ul>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

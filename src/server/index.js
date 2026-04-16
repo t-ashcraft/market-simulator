@@ -1,4 +1,6 @@
 const http = require('http');
+const fs = require('fs');
+const path = require('path');
 const WebSocket = require('ws');
 
 const { TICK_INTERVAL_MS } = require('./config');
@@ -7,6 +9,44 @@ const { runSimulationTick } = require('./simulation');
 const { parseMessage, makeEvent } = require('./protocol');
 
 const PORT = Number(process.env.PORT || 3000);
+const PUBLIC_DIR = path.resolve(__dirname, '../../public');
+
+const MIME_TYPES = {
+  '.html': 'text/html; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.js': 'application/javascript; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.svg': 'image/svg+xml',
+  '.ico': 'image/x-icon',
+};
+
+function serveStatic(req, res) {
+  const reqPath = req.url === '/' ? '/index.html' : req.url;
+  const normalizedPath = path.normalize(decodeURIComponent(reqPath)).replace(/^\.+[\\/]/, '');
+  const filePath = path.join(PUBLIC_DIR, normalizedPath);
+
+  if (!filePath.startsWith(PUBLIC_DIR)) {
+    res.writeHead(400, { 'content-type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Invalid path.' }));
+    return;
+  }
+
+  fs.readFile(filePath, (error, fileBuffer) => {
+    if (error) {
+      res.writeHead(404, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Not found.' }));
+      return;
+    }
+
+    const ext = path.extname(filePath).toLowerCase();
+    const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+    res.writeHead(200, { 'content-type': contentType });
+    res.end(fileBuffer);
+  });
+}
 
 const state = new MarketState();
 const server = http.createServer((req, res) => {
@@ -16,8 +56,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  res.writeHead(404, { 'content-type': 'application/json' });
-  res.end(JSON.stringify({ error: 'Not found.' }));
+  serveStatic(req, res);
 });
 
 const wss = new WebSocket.Server({ server });
