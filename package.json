@@ -1,0 +1,16 @@
+{
+  "name": "market-simulator",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Client-server market simulator demo",
+  "main": "src/server/index.js",
+  "scripts": {
+    "start": "node src/server/index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
